@@ -1,0 +1,94 @@
+
+<h1>Flüge suchen</h1>
+<form #f="ngForm" novalidate>
+<div class="form-group">
+  <label>Von</label>
+  <input [(ngModel)]="from"
+         name="from"
+         city="Graz,Hamburg,Gleidorf,Weiz"
+         required
+         minlength="3"
+         maxlength="30"
+         asyncCity
+         pattern="[0-9a-zA-ZöäüßÖÄÜ]*"
+         class="form-control">
+
+  <div *ngIf="!f?.controls?.from?.valid">
+    Fehler beim Validieren
+    {{f?.controls?.from?.errors | json }}
+  </div>
+
+  <div *ngIf="f?.controls?.from?.hasError('city')">
+    Diese Stadt ist nicht gültig!
+  </div>
+
+  <div *ngIf="f?.controls?.from?.pending">
+    <marquee>
+      Es wird gerade validiert!
+    </marquee>
+  </div>
+
+  <div *ngIf="f?.controls?.from?.hasError('asyncCity')">
+    Es gibt derzeit keine freien Flüge für diese Stadt
+  </div>
+
+
+
+
+  <div *ngIf="f?.controls?.from?.hasError('minlength')">
+    Zu kurz!
+  </div>
+
+  <div *ngIf="f?.controls?.from?.hasError('pattern')">
+    Darf nur Zahlen und Buchstaben beinhalten
+  </div>
+
+  <div *ngIf="f?.controls?.from?.hasError('required')">
+    Ist ein Pflichtfeld
+  </div>
+
+
+</div>
+<div class="form-group">
+  <label>Nach</label>
+  <input name="to" [(ngModel)]="to" class="form-control">
+</div>
+<div class="form-group">
+  <button class="btn" (click)="search()">Suchen</button>
+</div>
+</form>
+
+<!-- [ngClass]="{ 'active': f == selectedFlight }" -->
+<!-- lg: Desktop -->
+<!-- md: Laptop -->
+<!-- sm: iPad -->
+<div *ngFor="let f of flights" class="col-xs-12 col-lg-3 col-md-4 col-sm-6 ">
+  <flight-card
+    [item]="f"
+    [(selectedItem)]="selectedFlight">
+  </flight-card>
+
+<!--
+    [selectedItem]="selectedFlight"
+    (selectedItemChange)="selectedFlight = $event">
+-->
+</div>
+
+<!--
+<table class="table table-striped">
+  <tr *ngFor="let f of flights" [ngStyle]="{ 'background-color': (f == selectedFlight) ? 'orange' : ''  }">
+    <td>{{f.id}}</td>
+    <td>{{f.from | city:'short' }}</td>
+    <td>{{f.to | city:'long' }}</td>
+    <td>{{f.date | date:'dd.MM.yyyy HH:mm'}}</td>
+    <td><a (click)="select(f)">Auswählen</a></td>
+  </tr>
+</table>
+-->
+
+<pre>Warenkorb
+------------------------
+{{ selectedFlight | json }}
+</pre>
+
+
